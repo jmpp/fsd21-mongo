@@ -123,10 +123,7 @@ Puis, importez les données de `restaurants.json` :
 
 ```bash
 # Importez les données JSON dans une base MongoDB 'ny'
-mongoimport --db ny \
-            --collection restaurants \
-            --drop \
-            --file restaurants.json
+mongoimport --db ny --collection restaurants --drop --file restaurants.json
 ```
 
 
@@ -257,7 +254,7 @@ Indications : pour itérer sur une requête vous utiliserez l'une des deux synta
 ```js
 // 1
 let count = 0;
-db.collection.find().forEach((doc) => print(tojson(doc)));
+db.collection.find().forEach((doc) => console.log(doc));
 
 // 2
 let count = 0;
