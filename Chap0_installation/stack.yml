@@ -5,7 +5,7 @@ services:
   mongo:
     container_name: docker_mongo
     image: mongo
-    restart: always
+    restart: "no"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example

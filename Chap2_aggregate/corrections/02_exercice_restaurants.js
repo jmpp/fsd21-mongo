@@ -74,11 +74,71 @@ db.restaurants.aggregate([
 // 4. Faites une requête qui récupère les 5 premiers restaurants Italiens les mieux notés et placez cette recherche dans une collection nommée top5.
 // { $out : "top5" }
 
+db.restaurants.aggregate([
+    { $match: {
+        cuisine: 'Italian'
+    } },
 
+    { $project: {
+        name: 1,
+        cuisine: 1,
+        borough: 1,
+        address: 1,
+        avgGrade: { $avg: '$grades.score' }
+    } },
+
+    { $sort: { avgGrade : -1 } },
+
+    { $limit: 5 },
+
+    { $out: "top5" }
+]);
 
 // 5. Récupérez le nombre de restaurants par quartier ainsi que leur type de cuisine qui contiennent AU MOINS un score supérieur ou égal à 30. Ordonnez le résultat par ordre décroissant de nombre de restaurant.
 
+db.restaurants.aggregate([
+    { $match: {
+        'grades.score': { $gte: 30 }
+    } },
 
+    { $group: {
+        _id: {
+            borough: '$borough',
+            cuisine: '$cuisine'
+        },
+        nbRestaurants: { $count: {} }
+    } },
+
+    { $sort: { nbRestaurants: -1 } }
+]);
 
 // 6. Cherchez les meilleurs restaurants en proposant une requête de votre choix, faites le par quartier. Puis donnez la moyenne des scores de ces restaurants.
 
+db.restaurants.aggregate([
+
+    { $project: {
+        name: 1,
+        cuisine: 1,
+        borough: 1,
+        address: 1,
+        avgGrade: { $avg: '$grades.score' }
+    } },
+
+    { $sort: { avgGrade : -1 } },
+
+    { $group: {
+        _id: '$borough',
+        restaurants: {
+            $push: {
+                name: '$name',
+                avgGrade: '$avgGrade'
+            }
+        }
+    } },
+
+    { $project: {
+        _id: 1,
+        restaurants: { $slice: ['$restaurants', 5] }
+    } }
+
+]);
