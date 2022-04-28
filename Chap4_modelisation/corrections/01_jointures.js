@@ -127,9 +127,18 @@ db.books.find({
 
 function addParents(original_id, doc_to_proceed) {
     // regarder si la ppté 'parent' est null ou non
-    // modifier le document courant pour ajouter au tableau 'ancestors' la valeur du parent direct
-    // répéter la même opération pour le document correspondant au 'parent' (récursivité) :
-    //   addParents( original_id, <document_correspondant_au_parent_direct> )
+    if (doc_to_proceed.parent) {
+        // modifier le document courant pour ajouter au tableau 'ancestors' la valeur du parent direct
+        db.categoriestree.updateOne(
+            { _id: original_id },
+            { $addToSet: { ancestors: doc_to_proceed.parent } }
+        );
+
+        const parentDoc = db.categoriestree.findOne({ _id: doc_to_proceed.parent });
+
+        // répéter la même opération pour le document correspondant au 'parent' (récursivité) :
+        addParents( original_id, parentDoc );
+    }
 }
 
 db.categoriestree.find().forEach(doc => {
