@@ -125,9 +125,9 @@ const books = [
 
 ```js
 const newBooks = [
-    { title : "Python & SQL"}, // Python & SQL
+    { title : "Python & SQL"}, // Programmation & SQL
     { title : "JS SQL ou NoSQL" }, // programmation
-    { title : "Pandas & SQL & NoSQL"}, // SQL, NoSQL et Python
+    { title : "Pandas & SQL & NoSQL"}, // SQL, NoSQL et Programmation
     { title : "Modélisation des données"} // aucune catégorie
 ]
 ```
