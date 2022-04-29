@@ -1,0 +1,26 @@
+extends layout.pug
+
+block content
+  <h1>Statistiques</h1>
+
+  <p>Voici les statistiques des restaurants :</p>
+
+  <ul>
+    <li>Il y a #{nbRestaurants} restaurants dans la base</li>
+    <li>Il y a #{boroughs.length} quartiers</li>
+    <li>Il y a #{cuisines.length} types de cuisine distincts</li>
+  </ul>
+
+  <p>Voici tous les quartiers disponibles :</p>
+
+  <ul>
+    each borough in boroughs
+      <li>#{borough}</li>
+  </ul>
+
+  <p>Les 10 meilleurs restaurants (meilleure moyenne) sont :</p>
+
+  <ul>
+    each resto in bestRestaurants
+      <li>#{resto.name} (#{resto.avg})</li>
+  </ul>

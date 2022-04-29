@@ -14,8 +14,14 @@ app.use("/static", express.static("./static"));
 app.use("/", require("./router"));
 
 // App initialisation
+const DB_NAME = "ny";
 
-// Démarrage de l'application Node.js
-app.listen(port, () => {
-  console.log(`http://localhost:${port}`);
+// OUVRIR d'abord la connexion à MongoDB
+require('./database.js').open(DB_NAME).then(() => {
+  
+  // Et ensuite, Démarrage de l'application Node.js
+  app.listen(port, () => {
+    console.log(`http://localhost:${port}`);
+  });
+
 });
