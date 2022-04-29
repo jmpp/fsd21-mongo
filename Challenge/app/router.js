@@ -10,6 +10,8 @@ const { getDBObject } = require('./database.js');
 router.get("/", getHome);
 router.get("/stats", getStats);
 router.get("/example-form", getExampleForm);
+router.get("/restos", getRestos);
+router.get("/explore", getExplore);
 
 /**
  * Déclaration des controlleurs de l'app
@@ -93,6 +95,73 @@ async function getExampleForm(req, res) {
   }
 
   res.render('exemple-form');
+}
+
+/**
+ * GET /restos
+ * Page permettant de rechercher un restaurant
+ */
+async function getRestos (req, res) {
+  const db = getDBObject();
+
+  // Récupérer les données de la QueryString
+  const { searchString } = req.query;
+
+  if (searchString) {
+    // Récupère l'objet Collection 'restaurants' de la base Mongo
+    const restaurants = await db.collection("restaurants");
+
+    const results = await restaurants.find({
+      name: new RegExp(searchString, 'ig'),
+      // name: /variableJS/ig
+    }).sort({ name: 1 }).limit(20).toArray();
+
+    res.render("restos", { results, searchString });
+    return;
+  }
+
+  res.render("restos");
+}
+
+/**
+ * GET /explore
+ * Page permettant d'explorer les restaurants par cuisine/quartier
+ */
+async function getExplore (req, res) {
+  const db = getDBObject();
+
+  // Récupère l'objet Collection 'restaurants' de la base Mongo
+  const restaurants = await db.collection("restaurants");
+
+  // Parallèlisation des promesses pour un gain de temps
+  const [boroughs, cuisines] = await Promise.all([
+    restaurants.distinct("borough"),
+    restaurants.distinct("cuisine")
+  ]);
+
+  // Récupération des éléments de la Query String
+  const {
+    borough: selectedBorough,
+    cuisine: selectedCuisine
+  } = req.query;
+  
+  if (selectedBorough && selectedCuisine) {
+    const results = await restaurants.find({
+      borough: selectedBorough,
+      cuisine: selectedCuisine,
+    }).toArray();
+
+    res.render("explore", {
+      boroughs,
+      cuisines,
+      results,
+      selectedBorough,
+      selectedCuisine
+    });
+    return;
+  }
+
+  res.render("explore", { boroughs, cuisines });
 }
 
 // Exporte le routeur pour le fichier principal
