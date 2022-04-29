@@ -1,0 +1,18 @@
+extends layout.pug
+
+block content
+  <h1>Exemple récupération formulaire</h1>
+
+  <form method="get" action="?">
+    <input type="text" name="pseudo" />
+    
+    <select name="gender">
+      <option value="male">Homme</option>
+      <option value="female">Femme</option>
+    </select>
+
+    <button type="submit">Envoyer</button>
+  </form>
+
+  if pseudo && gender
+    <p>Coucou #{pseudo} (#{gender})</p>

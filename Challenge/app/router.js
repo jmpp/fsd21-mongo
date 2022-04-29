@@ -9,6 +9,7 @@ const { getDBObject } = require('./database.js');
 
 router.get("/", getHome);
 router.get("/stats", getStats);
+router.get("/example-form", getExampleForm);
 
 /**
  * Déclaration des controlleurs de l'app
@@ -73,6 +74,25 @@ async function getStats(req, res) {
     cuisines,
     bestRestaurants
   });
+}
+
+/**
+ * GET /example-form
+ * Page d'exemple pour voir comment récupérer les données d'un formulaire avec Node
+ */
+
+async function getExampleForm(req, res) {
+  const pseudo = req.query.pseudo;
+  const gender = req.query.gender;
+
+  if (pseudo && gender) {
+    console.log('Le client envoie les données GET :', pseudo, gender);
+
+    res.render('exemple-form', { pseudo, gender });
+    return;
+  }
+
+  res.render('exemple-form');
 }
 
 // Exporte le routeur pour le fichier principal
